@@ -4,7 +4,8 @@
       type="text"
       v-model="newTodoItem"
       v-on:keyup.enter="addTodo"
-      placeholder="To do" style="text-align: center"
+      placeholder="To do"
+      style="text-align: center"
     />
     <span class="addContainer" v-on:click="addTodo">
       <i class="bi bi-calendar-plus addBtn"></i>
@@ -23,8 +24,7 @@ export default {
   methods: {
     addTodo: function () {
       if (this.newTodoItem !== "") {
-        var obj = { completed: false, item: this.newTodoItem };
-        localStorage.setItem(this.newTodoItem, JSON.stringify(obj));
+        this.$emit('addTodoItem',this.newTodoItem)
         this.clearInput();
       }
     },
