@@ -9,28 +9,55 @@
     />
     <span class="addContainer" v-on:click="addTodo">
       <i class="bi bi-calendar-plus addBtn"></i>
-      <!-- <i class="fas fa-calendar-plus addBtn"></i> -->
+            <!-- <i class="fas fa-calendar-plus addBtn"></i> -->
     </span>
+
+    <TodoModal v-if="showModal" @close="showModal = false">     
+        <h3 slot="header">
+          경고!
+          <i class="closeModalBtn bi bi-x-square" @click="showModal = false"></i>
+        </h3>
+        <div slot="body">
+          아무것도 입력하지 않았어요.
+        </div>
+        <!-- <h4 slot="footer"> -->
+          <!-- copy right -->
+        <!-- </h4> -->
+
+
+        바디: 무언가를 입력하세요
+        푸터: copy right
+      </TodoModal>
   </div>
 </template>
 
 <script>
+import TodoModal from './common/TodoModal.vue'
+
 export default {
-  data: function () {
+  data() {
     return {
       newTodoItem: "",
+      showModal: false
     };
   },
   methods: {
-    addTodo: function () {
+    addTodo() {
       if (this.newTodoItem !== "") {
-        this.$emit('addTodoItem',this.newTodoItem)
+        // this.$emit('addTodoItem',this.newTodoItem)
+        this.$store.commit('addOneItem', this.newTodoItem)
         this.clearInput();
+      } else{
+        this.showModal = !this.showModal;
       }
+      
     },
-    clearInput: function () {
+    clearInput() {
       this.newTodoItem = "";
-    },
+    }
+  },
+  components: {
+    TodoModal
   },
 };
 </script>
@@ -62,5 +89,8 @@ input:focus {
   color: white;
   width: 50px;
   vertical-align: middle;
+}
+.closeModalBtn {
+  color: #42b983;
 }
 </style>

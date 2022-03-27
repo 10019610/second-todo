@@ -1,8 +1,9 @@
 <template>
   <div>
-    <ul>
+    <transition-group name="list" tag="ul">
+    
       <li
-        v-for="(todoItem, index) in propsdata"
+        v-for="(todoItem, index) in this.$store.state.todoItems"
         v-bind:key="todoItem.item"
         class="shadow"
       >
@@ -19,33 +20,22 @@
           <i class="bi bi-trash3-fill"></i>
         </span>
       </li>
-    </ul>
+    </transition-group>
   </div>
 </template>
 
 <script>
-export default {
-  props: ["propsdata"],
+export default {  
   methods: {
-    removeTodo: function (todoItem, index) {
-      this.$emit("removeItem", todoItem, index);
-    },
-    toggleComplete: function (todoItem, index) {
-      console.log(todoItem, index);
-      todoItem.completed = !todoItem.completed;
-      // 로컬스토리지의 데이터 갱신
-      localStorage.removeItem(todoItem.item);
-      localStorage.setItem(todoItem.item, JSON.stringify(todoItem));
-    },
-    // sortobj: function (a, b) {
-    //   if (a.item < b.item) {
-    //     return -1;
-    //   }
-    //   if (a.item > b.item) {
-    //     return 1;
-    //   }
-    //   return 0;
-    // },
+    removeTodo(todoItem, index) {
+      // const obj = {      객체 만들어서도  밑에 obj 를 넣어서 사용가능
+      //   todoItem: todoItem,
+      //   index: index
+      this.$store.commit('removeOneItem', {todoItem, index})
+      },
+    toggleComplete(todoItem, index) {
+      this.$store.commit('toggleOneItem', {todoItem, index});
+      }
   },
 };
 </script>
@@ -82,5 +72,14 @@ li {
 .textCompleted {
   text-decoration: line-through;
   color: #b3adad;
+}
+
+/* 리스트 아이템 트랜지션 효과*/
+.list-enter-active, .list-leave-active {
+  transition: all 1s;
+}
+.list-enter, .list-leave-to /* .list-leave-active below version 2.1.8 */ {
+  opacity: 0;
+  transform: translateY(30px);
 }
 </style>
